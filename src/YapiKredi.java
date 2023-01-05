@@ -83,7 +83,7 @@ public class YapiKredi extends Banka {
 	@Override
 	double Hesapla(int ParaMiktar, double faiz) {
 		// TODO Auto-generated method stub
-		return (ParaMiktar * faiz) + ParaMiktar;
+		return (ParaMiktar * faiz) / 100 + ParaMiktar;
 	}
 
 }

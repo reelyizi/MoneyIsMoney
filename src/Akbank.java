@@ -1,8 +1,6 @@
 
 public class Akbank extends Banka {
 
-	
-	
 	@Override
 	public double IhtiyacKredisi(int ParaMiktar) {
 		if (ParaMiktar > 0 && ParaMiktar < 10000) {
@@ -82,7 +80,7 @@ public class Akbank extends Banka {
 	@Override
 	double Hesapla(int ParaMiktar, double faiz) {
 		// TODO Auto-generated method stub
-		return (ParaMiktar * faiz) + ParaMiktar;
+		return (ParaMiktar * faiz) / 100 + ParaMiktar;
 	}
 
 }
