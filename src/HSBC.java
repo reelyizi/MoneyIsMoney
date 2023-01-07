@@ -27,7 +27,8 @@ public class HSBC extends Banka {
 		return Hesapla(ParaMiktar, GetInterestRate());
 	}
 
-	public double KonutKredisi(int ParaMiktar, int Vade) {
+	@Override
+	public double KonutKredisi(int ParaMiktar) {
 		if (ParaMiktar > 0 && ParaMiktar < 10000) {
 			SetInterestRate(3.09);
 			return Hesapla(ParaMiktar, GetInterestRate());
@@ -53,7 +54,8 @@ public class HSBC extends Banka {
 
 	}
 
-	public double TasitKredisi(int ParaMiktar, int Vade) {
+	@Override
+	public double TasitKredisi(int ParaMiktar) {
 		if (ParaMiktar > 0 && ParaMiktar < 10000) {
 			SetInterestRate(2.79);
 			return Hesapla(ParaMiktar, GetInterestRate());
@@ -84,5 +86,6 @@ public class HSBC extends Banka {
 		// TODO Auto-generated method stub
 		return (ParaMiktar * faiz) / 100 + ParaMiktar;
 	}
+
 
 }

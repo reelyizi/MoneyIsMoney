@@ -15,4 +15,6 @@ public abstract class Banka{
 	abstract double Hesapla(int ParaMiktar, double faiz);
 
 	abstract double IhtiyacKredisi(int money);
+	abstract double KonutKredisi(int money);
+	abstract double TasitKredisi(int money);
 }
