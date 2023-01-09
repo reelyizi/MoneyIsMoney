@@ -33,6 +33,7 @@ public class MoneyIsMoney extends JFrame {
 	final String totalCostTextString = "Total Cost: ", monthlyCostTextString = "Monthly Credit Cost: ",
 			interestRateTextString = "Interest Rate: ";
 	boolean individualFlag = false;
+	private JTextField ExchangeAmountTextField;
 
 	/**
 	 * Launch the application.
@@ -54,11 +55,10 @@ public class MoneyIsMoney extends JFrame {
 	 * Create the frame.
 	 */
 	public MoneyIsMoney() {
-
 		setResizable(false);
 		setTitle("Money is money");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 922, 569);
+		setBounds(100, 100, 1140, 572);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -131,7 +131,7 @@ public class MoneyIsMoney extends JFrame {
 
 		CreditCalculation = new JPanel();
 		FormVariables.CreditCalculation = CreditCalculation;
-		CreditCalculation.setBounds(350, 165, 520, 354);
+		CreditCalculation.setBounds(350, 165, 438, 348);
 		contentPane.add(CreditCalculation);
 		CreditCalculation.setLayout(null);
 
@@ -144,11 +144,11 @@ public class MoneyIsMoney extends JFrame {
 				maturityComboBox.setSelectedItem(0);
 				IndividualNeedPanel.setVisible(true);
 				switch (creditTypeIndex) {
-					case 0:
-						CreditTypeLabel.setText("Individual Credit");break;
 					case 1:
-						CreditTypeLabel.setText("House Credit");break;
+						CreditTypeLabel.setText("Individual Credit");break;
 					case 2:
+						CreditTypeLabel.setText("House Credit");break;
+					case 3:
 						CreditTypeLabel.setText("Vehicle Credit");break;
 				}
 			}			
@@ -227,6 +227,37 @@ public class MoneyIsMoney extends JFrame {
 		CreditCalculation.setVisible(false);
 
 		DefineButton(ButtonsPanel);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(798, 163, 318, 350);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel_1 = new JLabel("Dollar Exchange");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(10, 10, 87, 38);
+		panel.add(lblNewLabel_1);
+		
+		ExchangeAmountTextField = new JTextField();
+		ExchangeAmountTextField.setText("0");
+		ExchangeAmountTextField.setBounds(74, 103, 117, 32);
+		panel.add(ExchangeAmountTextField);
+		ExchangeAmountTextField.setColumns(10);
+		
+		JLabel lblNewLabel_1_2 = new JLabel("Amount:");
+		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1_2.setBounds(10, 100, 54, 32);
+		panel.add(lblNewLabel_1_2);
+		
+		JLabel lblNewLabel_1_3 = new JLabel("Purchase:");
+		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1_3.setBounds(10, 145, 76, 32);
+		panel.add(lblNewLabel_1_3);
+		
+		JLabel lblNewLabel_1_3_1 = new JLabel("Sales:");
+		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1_3_1.setBounds(10, 58, 76, 32);
+		panel.add(lblNewLabel_1_3_1);
 	}
 
 	private void DefineButton(JPanel ButtonsPanel) {
@@ -238,7 +269,7 @@ public class MoneyIsMoney extends JFrame {
 		});
 		ButtonsPanel.add(IndividualCalculationToolButton);
 
-		JButton btnNewButton_3 = new JButton("Döviz Hesaplama");
+		JButton btnNewButton_3 = new JButton("Coming Soon");
 		ButtonsPanel.add(btnNewButton_3);
 
 		JButton btnNewButton_2 = new JButton("Coming Soon");
