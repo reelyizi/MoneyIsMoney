@@ -19,21 +19,24 @@ import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.CaretEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MoneyIsMoney extends JFrame {
 
-	private JPanel contentPane, IndividualNeedPanel, CreditCalculation;
+	private JPanel contentPane, IndividualNeedPanel, CreditCalculation, ExchangePanel;
 	private JTextField textField;
 	private JComboBox maturityComboBox;
-	private JLabel monthlyCostIndividualLabel, interestRateIndividualLabel, totalCostIndividualLabel, CreditTypeLabel;
+	private JLabel monthlyCostIndividualLabel, interestRateIndividualLabel, totalCostIndividualLabel, CreditTypeLabel,
+			SalesLabel, PurchaseLabel, lblSalesAmount, lblPurchaseAmount;
 
 	private int money, interestRate, creditTypeIndex = -1;
 	private Banka bankType;
 
 	final String totalCostTextString = "Total Cost: ", monthlyCostTextString = "Monthly Credit Cost: ",
-			interestRateTextString = "Interest Rate: ";
+			interestRateTextString = "Interest Rate: ", salesLabelString = "Sales:", purchaseLabelString = "Purchase: ";
 	boolean individualFlag = false;
-	private JTextField ExchangeAmountTextField;
+	private JTextField ExchangeTextField;
 
 	/**
 	 * Launch the application.
@@ -79,7 +82,11 @@ public class MoneyIsMoney extends JFrame {
 				IndividualNeedPanel.setVisible(false);
 				CreditCalculation.setVisible(false);
 				ResetPanels();
-				bankType = new Akbank();
+				ResetExchangePanels();
+				bankType = new Akbank(18.6510, 18.9610);
+				SalesLabel.setText(salesLabelString + bankType.GetSalesRatio());
+				PurchaseLabel.setText(purchaseLabelString + bankType.GetPurchaseRatio());
+				ExchangePanel.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(50, 40, 115, 45);
@@ -92,7 +99,11 @@ public class MoneyIsMoney extends JFrame {
 				IndividualNeedPanel.setVisible(false);
 				CreditCalculation.setVisible(false);
 				ResetPanels();
-				bankType = new YapiKredi();
+				ResetExchangePanels();
+				bankType = new YapiKredi(18.4718, 19.0826);
+				SalesLabel.setText(salesLabelString + bankType.GetSalesRatio());
+				PurchaseLabel.setText(purchaseLabelString + bankType.GetPurchaseRatio());
+				ExchangePanel.setVisible(true);
 			}
 		});
 		btnYapkredi.setBounds(200, 40, 115, 45);
@@ -105,7 +116,11 @@ public class MoneyIsMoney extends JFrame {
 				IndividualNeedPanel.setVisible(false);
 				CreditCalculation.setVisible(false);
 				ResetPanels();
-				bankType = new HSBC();
+				ResetExchangePanels();
+				bankType = new HSBC(18.7498, 18.7836);
+				SalesLabel.setText(salesLabelString + bankType.GetSalesRatio());
+				PurchaseLabel.setText(purchaseLabelString + bankType.GetPurchaseRatio());
+				ExchangePanel.setVisible(true);
 			}
 		});
 		btnHsbc.setBounds(350, 40, 115, 45);
@@ -118,7 +133,11 @@ public class MoneyIsMoney extends JFrame {
 				IndividualNeedPanel.setVisible(false);
 				CreditCalculation.setVisible(false);
 				ResetPanels();
-				bankType = new Ziraat();
+				ResetExchangePanels();
+				bankType = new Ziraat(18.7286, 19.02095);
+				SalesLabel.setText(salesLabelString + bankType.GetSalesRatio());
+				PurchaseLabel.setText(purchaseLabelString + bankType.GetPurchaseRatio());
+				ExchangePanel.setVisible(true);
 			}
 		});
 		btnZiraat.setBounds(500, 40, 115, 45);
@@ -137,24 +156,27 @@ public class MoneyIsMoney extends JFrame {
 
 		JComboBox CreditType = new JComboBox();
 		CreditType.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			
-				if(creditTypeIndex != CreditType.getSelectedIndex())
+			public void actionPerformed(ActionEvent e) {
+				if (creditTypeIndex != CreditType.getSelectedIndex())
 					ResetPanels();
 				creditTypeIndex = CreditType.getSelectedIndex();
 				maturityComboBox.setSelectedItem(0);
 				IndividualNeedPanel.setVisible(true);
 				switch (creditTypeIndex) {
-					case 1:
-						CreditTypeLabel.setText("Individual Credit");break;
-					case 2:
-						CreditTypeLabel.setText("House Credit");break;
-					case 3:
-						CreditTypeLabel.setText("Vehicle Credit");break;
+				case 1:
+					CreditTypeLabel.setText("Individual Credit");
+					break;
+				case 2:
+					CreditTypeLabel.setText("House Credit");
+					break;
+				case 3:
+					CreditTypeLabel.setText("Vehicle Credit");
+					break;
 				}
-			}			
+			}
 		});
 
-		CreditType.setModel(new DefaultComboBoxModel(new String[] {"", "Individual Need", "Housing", "Vehicle"}));
+		CreditType.setModel(new DefaultComboBoxModel(new String[] { "", "Individual Need", "Housing", "Vehicle" }));
 		CreditType.setBounds(171, 13, 147, 25);
 		CreditCalculation.add(CreditType);
 
@@ -178,7 +200,7 @@ public class MoneyIsMoney extends JFrame {
 		textField.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent e) {
 				if (textField.getText().length() > 0)
-					money = Integer.valueOf(textField.getText());				
+					money = Integer.valueOf(textField.getText());
 				if (money > 1000 && interestRate > 0)
 					CalculateGivenIndex(creditTypeIndex, money, interestRate);
 				else
@@ -227,44 +249,74 @@ public class MoneyIsMoney extends JFrame {
 		CreditCalculation.setVisible(false);
 
 		DefineButton(ButtonsPanel);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(798, 163, 318, 350);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
+
+		ExchangePanel = new JPanel();
+		ExchangePanel.setBounds(798, 163, 318, 350);
+		contentPane.add(ExchangePanel);
+		ExchangePanel.setLayout(null);
+		ExchangePanel.setVisible(false);
+
 		JLabel lblNewLabel_1 = new JLabel("Dollar Exchange");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(10, 10, 87, 38);
-		panel.add(lblNewLabel_1);
-		
-		ExchangeAmountTextField = new JTextField();
-		ExchangeAmountTextField.setText("0");
-		ExchangeAmountTextField.setBounds(74, 103, 117, 32);
-		panel.add(ExchangeAmountTextField);
-		ExchangeAmountTextField.setColumns(10);
-		
+		lblNewLabel_1.setBounds(10, 10, 181, 38);
+		ExchangePanel.add(lblNewLabel_1);
+
+		ExchangeTextField = new JTextField();
+		ExchangeTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				double value = Integer.valueOf(ExchangeTextField.getText());
+				if (value > 0) {
+					lblSalesAmount.setText("Sales amount: " + String.valueOf(bankType.CalculateSaleExchange(value)));
+					lblPurchaseAmount
+							.setText("Purchase amount: " + String.valueOf(bankType.CalculatePurchaseExchange(value)));
+				} else {
+					lblSalesAmount.setText("000");
+					lblPurchaseAmount.setText("000");
+				}
+			}
+		});
+		ExchangeTextField.addCaretListener(new CaretListener() {
+			public void caretUpdate(CaretEvent e) {
+
+			}
+		});
+		ExchangeTextField.setText("0");
+		ExchangeTextField.setBounds(74, 103, 117, 32);
+		ExchangePanel.add(ExchangeTextField);
+		ExchangeTextField.setColumns(10);
+
 		JLabel lblNewLabel_1_2 = new JLabel("Amount:");
 		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel_1_2.setBounds(10, 100, 54, 32);
-		panel.add(lblNewLabel_1_2);
-		
-		JLabel lblNewLabel_1_3 = new JLabel("Purchase:");
-		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_1_3.setBounds(10, 145, 76, 32);
-		panel.add(lblNewLabel_1_3);
-		
-		JLabel lblNewLabel_1_3_1 = new JLabel("Sales:");
-		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_1_3_1.setBounds(10, 58, 76, 32);
-		panel.add(lblNewLabel_1_3_1);
+		ExchangePanel.add(lblNewLabel_1_2);
+
+		PurchaseLabel = new JLabel("Purchase:");
+		PurchaseLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		PurchaseLabel.setBounds(134, 58, 129, 32);
+		ExchangePanel.add(PurchaseLabel);
+
+		SalesLabel = new JLabel("Sales:");
+		SalesLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		SalesLabel.setBounds(10, 58, 114, 32);
+		ExchangePanel.add(SalesLabel);
+
+		lblSalesAmount = new JLabel("Sales Amount:");
+		lblSalesAmount.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSalesAmount.setBounds(10, 147, 181, 32);
+		ExchangePanel.add(lblSalesAmount);
+
+		lblPurchaseAmount = new JLabel("Purchase Amount:");
+		lblPurchaseAmount.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPurchaseAmount.setBounds(10, 187, 181, 32);
+		ExchangePanel.add(lblPurchaseAmount);
 	}
 
 	private void DefineButton(JPanel ButtonsPanel) {
 		JButton IndividualCalculationToolButton = new JButton("Individual Calculation Tool");
 		IndividualCalculationToolButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FormVariables.CreditCalculation.setVisible(true);				
+				FormVariables.CreditCalculation.setVisible(true);
 			}
 		});
 		ButtonsPanel.add(IndividualCalculationToolButton);
@@ -303,22 +355,28 @@ public class MoneyIsMoney extends JFrame {
 
 	private void CalculateVehicleCredit(int money, int interestRate) {
 		individualFlag = true;
-		totalCostIndividualLabel.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.TasitKredisi(money))));
-		monthlyCostIndividualLabel.setText(monthlyCostTextString+ String.valueOf(String.format("%.20f", bankType.TasitKredisi(money) / interestRate)));
+		totalCostIndividualLabel
+				.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.TasitKredisi(money))));
+		monthlyCostIndividualLabel.setText(monthlyCostTextString
+				+ String.valueOf(String.format("%.20f", bankType.TasitKredisi(money) / interestRate)));
 		interestRateIndividualLabel.setText(interestRateTextString + String.valueOf(bankType.GetInterestRate()));
 	}
 
 	private void CalculateHouseCredit(int money, int interestRate) {
 		individualFlag = true;
-		totalCostIndividualLabel.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.KonutKredisi(money))));
-		monthlyCostIndividualLabel.setText(monthlyCostTextString+ String.valueOf(String.format("%.20f", bankType.KonutKredisi(money) / interestRate)));
+		totalCostIndividualLabel
+				.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.KonutKredisi(money))));
+		monthlyCostIndividualLabel.setText(monthlyCostTextString
+				+ String.valueOf(String.format("%.20f", bankType.KonutKredisi(money) / interestRate)));
 		interestRateIndividualLabel.setText(interestRateTextString + String.valueOf(bankType.GetInterestRate()));
 	}
 
 	private void CalculateIndividualNeed(int Money, int interestRate) {
 		individualFlag = true;
-		totalCostIndividualLabel.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.IhtiyacKredisi(money))));
-		monthlyCostIndividualLabel.setText(monthlyCostTextString+ String.valueOf(String.format("%.20f", bankType.IhtiyacKredisi(money) / interestRate)));
+		totalCostIndividualLabel
+				.setText(totalCostTextString + String.valueOf(String.format("%.20f", bankType.IhtiyacKredisi(money))));
+		monthlyCostIndividualLabel.setText(monthlyCostTextString
+				+ String.valueOf(String.format("%.20f", bankType.IhtiyacKredisi(money) / interestRate)));
 		interestRateIndividualLabel.setText(interestRateTextString + String.valueOf(bankType.GetInterestRate()));
 	}
 
@@ -330,13 +388,19 @@ public class MoneyIsMoney extends JFrame {
 			individualFlag = false;
 		}
 	}
-	
-	private void ResetPanels() {	
+
+	private void ResetPanels() {
 		maturityComboBox.setSelectedItem(0);
 		money = interestRate = 0;
 		textField.setText("");
 		totalCostIndividualLabel.setText(totalCostTextString);
 		monthlyCostIndividualLabel.setText(monthlyCostTextString);
-		interestRateIndividualLabel.setText(interestRateTextString);
+		interestRateIndividualLabel.setText(interestRateTextString);		
+	}
+	
+	private void ResetExchangePanels() {
+		ExchangeTextField.setText("");
+		lblSalesAmount.setText("Sales amount: ");
+		lblPurchaseAmount.setText("Purchase amount: ");
 	}
 }

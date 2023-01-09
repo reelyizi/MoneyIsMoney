@@ -1,6 +1,18 @@
 
 public class YapiKredi extends Banka {
 
+	private double purchaseRatio;
+	private double saleRatio;
+	
+	public double GetPurchaseRatio() { return purchaseRatio;}
+	public double GetSalesRatio() { return saleRatio;}
+	
+	public YapiKredi(double purchaseRatio, double saleRatio) {
+		this.purchaseRatio = purchaseRatio;
+		this.saleRatio = saleRatio;
+	}
+	
+	
 	@Override
 	public double IhtiyacKredisi(int ParaMiktar) {
 		if (ParaMiktar > 0 && ParaMiktar < 10000) {
@@ -84,6 +96,19 @@ public class YapiKredi extends Banka {
 	double Hesapla(int ParaMiktar, double faiz) {
 		// TODO Auto-generated method stub
 		return (ParaMiktar * faiz) / 100 + ParaMiktar;
+	}
+
+	@Override
+	public double CalculateSaleExchange(double amount) {
+		// TODO Auto-generated method stub
+		return amount * saleRatio;
+	}
+
+
+	@Override
+	public double CalculatePurchaseExchange(double amount) {
+		// TODO Auto-generated method stub
+		return amount * purchaseRatio;
 	}
 
 }

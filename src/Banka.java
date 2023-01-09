@@ -17,4 +17,10 @@ public abstract class Banka{
 	abstract double IhtiyacKredisi(int money);
 	abstract double KonutKredisi(int money);
 	abstract double TasitKredisi(int money);
+	
+	abstract double GetPurchaseRatio();
+	abstract double GetSalesRatio();
+	
+	abstract double CalculatePurchaseExchange(double amount);
+	abstract double CalculateSaleExchange(double amount);
 }
