@@ -110,4 +110,9 @@ public class Akbank extends Banka {
 		// TODO Auto-generated method stub
 		return amount * purchaseRatio;
 	}
+	@Override
+	void dosyaIslemleri() {
+		// TODO Auto-generated method stub
+		
+	}
 }

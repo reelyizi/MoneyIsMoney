@@ -23,4 +23,6 @@ public abstract class Banka{
 	
 	abstract double CalculatePurchaseExchange(double amount);
 	abstract double CalculateSaleExchange(double amount);
+	
+	abstract void dosyaIslemleri();
 }

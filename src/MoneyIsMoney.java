@@ -1,5 +1,5 @@
 import java.awt.EventQueue;
-
+import java.io.* ;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.lang.model.element.NestingKind;
 import javax.sound.midi.Soundbank;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.InputMethodListener;
@@ -21,6 +22,10 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.CaretEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class MoneyIsMoney extends JFrame {
 
@@ -37,6 +42,7 @@ public class MoneyIsMoney extends JFrame {
 			interestRateTextString = "Interest Rate: ", salesLabelString = "Sales:", purchaseLabelString = "Purchase: ";
 	boolean individualFlag = false;
 	private JTextField ExchangeTextField;
+	private JTextField isimGirmeKutusu;
 
 	/**
 	 * Launch the application.
@@ -89,7 +95,7 @@ public class MoneyIsMoney extends JFrame {
 				ExchangePanel.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(50, 40, 115, 45);
+		btnNewButton.setBounds(50, 74, 115, 45);
 		contentPane.add(btnNewButton);
 
 		JButton btnYapkredi = new JButton("Yapıkredi");
@@ -106,7 +112,7 @@ public class MoneyIsMoney extends JFrame {
 				ExchangePanel.setVisible(true);
 			}
 		});
-		btnYapkredi.setBounds(200, 40, 115, 45);
+		btnYapkredi.setBounds(199, 74, 115, 45);
 		contentPane.add(btnYapkredi);
 
 		JButton btnHsbc = new JButton("HSBC");
@@ -123,7 +129,7 @@ public class MoneyIsMoney extends JFrame {
 				ExchangePanel.setVisible(true);
 			}
 		});
-		btnHsbc.setBounds(350, 40, 115, 45);
+		btnHsbc.setBounds(351, 70, 115, 45);
 		contentPane.add(btnHsbc);
 
 		JButton btnZiraat = new JButton("Ziraat");
@@ -140,7 +146,7 @@ public class MoneyIsMoney extends JFrame {
 				ExchangePanel.setVisible(true);
 			}
 		});
-		btnZiraat.setBounds(500, 40, 115, 45);
+		btnZiraat.setBounds(498, 70, 115, 45);
 		contentPane.add(btnZiraat);
 
 		JPanel ButtonsPanel = new JPanel();
@@ -310,7 +316,50 @@ public class MoneyIsMoney extends JFrame {
 		lblPurchaseAmount.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPurchaseAmount.setBounds(10, 187, 181, 32);
 		ExchangePanel.add(lblPurchaseAmount);
-	}
+		
+		JLabel lblNewJgoodiesLabel = DefaultComponentFactory.getInstance().createLabel("Isminizi Giriniz");
+		lblNewJgoodiesLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewJgoodiesLabel.setBounds(10, 6, 103, 29);
+		contentPane.add(lblNewJgoodiesLabel);
+		
+		isimGirmeKutusu = new JTextField();
+		isimGirmeKutusu.setBounds(111, 10, 103, 26);
+		contentPane.add(isimGirmeKutusu);
+		isimGirmeKutusu.setColumns(10);
+		
+		JLabel hosgeldinKutusu = DefaultComponentFactory.getInstance().createTitle("Hosgeldin");
+		hosgeldinKutusu.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		hosgeldinKutusu.setBounds(351, 10, 139, 60);
+		contentPane.add(hosgeldinKutusu);
+		
+		JLabel isminCikacagiYer = DefaultComponentFactory.getInstance().createTitle("");
+		isminCikacagiYer.setFont(new Font("Tahoma", Font.BOLD, 25));
+		
+		JButton isimOnayButonu = new JButton("Click");
+		isimOnayButonu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e)  {
+				String isim;
+				isim = isimGirmeKutusu.getText();
+				
+				isminCikacagiYer.setText(isim);
+				
+				try {
+					dosyaIslemleri();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		isimOnayButonu.setBounds(218, 12, 24, 21);
+		contentPane.add(isimOnayButonu);
+		
+		//JLabel isminCikacagiYer = DefaultComponentFactory.getInstance().createTitle("");
+		isminCikacagiYer.setBounds(471, 10, 172, 60);
+		contentPane.add(isminCikacagiYer);
+	}  
 
 	private void DefineButton(JPanel ButtonsPanel) {
 		JButton IndividualCalculationToolButton = new JButton("Individual Calculation Tool");
@@ -378,6 +427,35 @@ public class MoneyIsMoney extends JFrame {
 		monthlyCostIndividualLabel.setText(monthlyCostTextString
 				+ String.valueOf(String.format("%.20f", bankType.IhtiyacKredisi(money) / interestRate)));
 		interestRateIndividualLabel.setText(interestRateTextString + String.valueOf(bankType.GetInterestRate()));
+	}
+	
+	public void dosyaIslemleri() throws IOException {
+		individualFlag = true;
+		File file = new File("isimler.txt");
+		if(!file.exists()) {
+			file.createNewFile();	
+		}
+		
+		String val= isimGirmeKutusu.getText();
+		FileWriter fWriter = new FileWriter(file, false);
+		BufferedWriter bWriter = new BufferedWriter(fWriter);
+		bWriter.write(val);
+		bWriter.close();
+		
+		FileReader fReader = new FileReader(file);
+		String line;
+		
+		BufferedReader bReader = new BufferedReader(fReader);
+		bReader.read();
+		
+		
+		
+		while ((line = bReader.readLine()) != null) {
+			System.out.println(line);
+		}
+		bReader.close();
+		
+		
 	}
 
 	private void ResetIndividualTexts() {
